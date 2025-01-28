@@ -105,7 +105,7 @@ app.use('/messages', messagesRouter);
 app.locals.siteName = 'VakanıBul';
 
 // MongoDB bağlantısı
-mongoose.connect('mongodb://127.0.0.1:27017/sacekimi', {
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/sacekimi', {
     useNewUrlParser: true,
     useUnifiedTopology: true
 })
