@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Arama Sonuçları - HairTransfer</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-content">
+            <a href="/" class="logo">HairTransfer</a>
+            <div class="nav-links">
+                <% if (user) { %>
+                    <a href="/profile">Profilim</a>
+                    <a href="/appointments">Randevularım</a>
+                    <a href="/logout">Çıkış</a>
+                <% } else { %>
+                    <a href="/login">Giriş</a>
+                    <a href="/register">Kayıt Ol</a>
+                <% } %>
+            </div>
+        </div>
+    </nav>
+
+    <div class="search-results-container">
+        <div class="filters-sidebar">
+            <h3>Filtreler</h3>
+            <form action="/search" method="GET" class="filters-form">
+                <div class="filter-group">
+                    <label>Fiyat Aralığı</label>
+                    <input type="range" name="minPrice" min="0" max="100000" step="1000">
+                    <div class="price-inputs">
+                        <input type="number" name="minPrice" placeholder="Min">
+                        <input type="number" name="maxPrice" placeholder="Max">
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <label>Minimum Deneyim</label>
+                    <select name="experience">
+                        <option value="">Tümü</option>
+                        <option value="5">5+ Yıl</option>
+                        <option value="10">10+ Yıl</option>
+                        <option value="15">15+ Yıl</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label>Minimum Değerlendirme</label>
+                    <select name="rating">
+                        <option value="">Tümü</option>
+                        <option value="4">4+ Yıldız</option>
+                        <option value="4.5">4.5+ Yıldız</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="filter-button">Filtreleri Uygula</button>
+            </form>
+        </div>
+
+        <div class="results-content">
+            <div class="search-summary">
+                <h2><%= doctors.length %> Doktor Bulundu</h2>
+                <p><%= searchParams.city %> için <%= searchParams.date ? new Date(searchParams.date).toLocaleDateString('tr-TR') : 'tüm tarihler' %></p>
+            </div>
+
+            <div class="doctors-grid">
+                <% doctors.forEach(doctor => { %>
+                    <div class="doctor-card">
+                        <div class="doctor-image">
+                            <img src="<%= doctor.image || '/images/default-doctor.jpg' %>" alt="<%= doctor.name %>">
+                        </div>
+                        <div class="doctor-info">
+                            <h3><%= doctor.name %></h3>
+                            <p class="hospital"><%= doctor.hospital %></p>
+                            <p class="location"><%= doctor.city %></p>
+                            <div class="stats">
+                                <span class="experience"><%= doctor.experience %> yıl deneyim</span>
+                                <span class="rating">⭐ <%= doctor.rating %>/5</span>
+                            </div>
+                            <div class="price-section">
+                                <p class="price"><%= doctor.price %> TL</p>
+                                <small>Başlangıç Fiyatı</small>
+                            </div>
+                            <a href="/doctors/<%= doctor._id %>" class="book-button">Detayları Gör</a>
+                        </div>
+                    </div>
+                <% }) %>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

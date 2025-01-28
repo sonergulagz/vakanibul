@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Vakalar - HairTransfer</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <%- include('../partials/navbar') %>
+
+    <div class="container cases-container">
+        <div class="cases-header">
+            <h1>Saç Ekimi Vakaları</h1>
+            <% if (user) { %>
+                <a href="/cases/new" class="btn-primary">
+                    <i class="fas fa-plus"></i>
+                    Yeni Vaka Yayınla
+                </a>
+            <% } %>
+        </div>
+
+        <div class="cases-grid">
+            <% if (cases.length === 0) { %>
+                <div class="no-cases">
+                    <i class="fas fa-folder-open"></i>
+                    <p>Henüz yayınlanmış vaka bulunmuyor.</p>
+                </div>
+            <% } else { %>
+                <% cases.forEach(case_ => { %>
+                    <div class="case-card">
+                        <div class="case-header">
+                            <h2 class="case-title"><%= case_.title %></h2>
+                            <span class="case-status <%= case_.status %>">
+                                <%= case_.status === 'active' ? 'Aktif' : 
+                                    case_.status === 'completed' ? 'Tamamlandı' : 'İptal Edildi' %>
+                            </span>
+                        </div>
+                        
+                        <div class="case-details">
+                            <div class="case-detail-item">
+                                <i class="fas fa-user-md"></i>
+                                <span><%= case_.type %></span>
+                            </div>
+                            <div class="case-detail-item">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span><%= case_.location %></span>
+                            </div>
+                            <div class="case-detail-item">
+                                <i class="fas fa-calendar"></i>
+                                <span><%= new Date(case_.date).toLocaleDateString('tr-TR') %></span>
+                            </div>
+                            <div class="case-detail-item">
+                                <i class="fas fa-money-bill-wave"></i>
+                                <span><%= case_.price %> ₺ (<%= case_.priceType %>)</span>
+                            </div>
+                        </div>
+
+                        <div class="case-publisher">
+                            <i class="fas fa-user"></i>
+                            <%= case_.publisher.name %>
+                        </div>
+
+                        <div class="case-actions">
+                            <a href="/cases/<%= case_._id %>" class="btn-outline">
+                                <i class="fas fa-eye"></i>
+                                Detayları Gör
+                            </a>
+                            <% if (user && case_.status === 'active' && case_.publisher.toString() !== user._id.toString()) { %>
+                                <button onclick="applyToCase('<%= case_._id %>')" class="btn-accept">
+                                    <i class="fas fa-check"></i>
+                                    Kabul Et
+                                </button>
+                            <% } %>
+                        </div>
+                    </div>
+                <% }) %>
+            <% } %>
+        </div>
+    </div>
+
+    <script>
+    async function applyToCase(caseId) {
+        try {
+            const response = await fetch(`/cases/${caseId}/apply`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                alert('Başvurunuz başarıyla alındı! Randevularım sayfasından takip edebilirsiniz.');
+                window.location.href = '/appointments';
+            } else {
+                alert(data.error || 'Bir hata oluştu');
+            }
+        } catch (error) {
+            console.error('Başvuru hatası:', error);
+            alert('Başvuru yapılırken bir hata oluştu');
+        }
+    }
+    </script>
+</body>
+</html> 

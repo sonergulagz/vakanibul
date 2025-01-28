@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>HairTransfer - Saç Ekimi Uzmanları</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <%- include('partials/navbar') %>
+
+    <section class="hero">
+        <div class="container">
+            <h1>Saç Ekimi Uzmanlarına Ulaşın</h1>
+            <p class="subtitle">Türkiye'nin en iyi saç ekimi uzmanlarıyla tanışın</p>
+            <div class="search-box">
+                <form class="search-form" action="/cases">
+                    <div class="input-group">
+                        <label>
+                            <i class="fas fa-hospital"></i>
+                            <select name="hospital" id="hospitalSelect" class="hospital-select">
+                                <option value="">Hastane Seçin</option>
+                                <% hospitals.forEach(hospital => { %>
+                                    <optgroup label="<%= hospital.name %>">
+                                        <% hospital.branches.forEach(branch => { %>
+                                            <option value="<%= `${hospital.name} ${branch}` %>">
+                                                <%= `${hospital.name} - ${branch}` %>
+                                            </option>
+                                        <% }) %>
+                                    </optgroup>
+                                <% }) %>
+                            </select>
+                        </label>
+                    </div>
+                    <div class="input-group">
+                        <label>
+                            <i class="fas fa-calendar"></i>
+                            <input type="date" name="date">
+                        </label>
+                    </div>
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-search"></i>
+                        Ara
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <section class="how-it-works">
+        <div class="container">
+            <div class="how-it-works-header">
+                <h1>Dakikalar içinde vaka yayınla</h1>
+                <p>Saç ekimi uzmanlarıyla hızlı ve güvenli şekilde iletişime geç</p>
+            </div>
+
+            <div class="steps-grid">
+                <div class="step-card">
+                    <div class="step-icon">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
+                    <h2>HairTransfer hesabı oluştur</h2>
+                    <p>Üyelerin sana güven duymasını sağlamak için profil resmini, seninle ilgili birkaç sözcük ve telefon numaranı ekle.</p>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-icon">
+                        <i class="fas fa-clipboard-list"></i>
+                    </div>
+                    <h2>Vakanı yayınla</h2>
+                    <p>Vaka alma fırsatını artırmak için hastane konumunu, vaka tarihini belirt ve önerilen fiyatımızı incele.</p>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-icon">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                    <h2>Talepleri kabul et</h2>
+                    <p>Uzman profillerini incele ve seninle çalışma taleplerini kabul et. Seyahat giderlerinden tasarruf etmek bu kadar kolay!</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="features-section">
+        <div class="container">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <div class="feature-content">
+                    <h3>Güvenli İletişim</h3>
+                    <p>Tüm uzmanlarımız detaylı bir doğrulama sürecinden geçer. Profillerini ve değerlendirmelerini görüntüleyebilirsiniz.</p>
+                </div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="feature-content">
+                    <h3>Hızlı Eşleşme</h3>
+                    <p>Vakanızı yayınladıktan sonra uygun uzmanlarla hızlıca eşleşin ve randevunuzu planlayın.</p>
+                </div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-hand-holding-usd"></i>
+                </div>
+                <div class="feature-content">
+                    <h3>Uygun Fiyatlar</h3>
+                    <p>Farklı uzmanların fiyatlarını karşılaştırın ve bütçenize en uygun seçeneği bulun.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <% if (doctors && doctors.length > 0) { %>
+    <section class="featured-doctors">
+        <div class="container">
+            <h2>Öne Çıkan Uzmanlar</h2>
+            <div class="doctors-grid">
+                <% doctors.forEach(doctor => { %>
+                    <div class="doctor-card">
+                        <div class="doctor-image">
+                            <img src="<%= doctor.profileImage %>" alt="<%= doctor.name %>">
+                        </div>
+                        <div class="doctor-info">
+                            <h3><%= doctor.name %></h3>
+                            <% if (doctor.title) { %>
+                                <p class="doctor-title"><%= doctor.title %></p>
+                            <% } %>
+                            <% if (doctor.location) { %>
+                                <p class="doctor-location"><i class="fas fa-map-marker-alt"></i> <%= doctor.location %></p>
+                            <% } %>
+                        </div>
+                    </div>
+                <% }) %>
+            </div>
+        </div>
+    </section>
+    <% } %>
+
+    <%- include('partials/footer') %>
+</body>
+</html> 

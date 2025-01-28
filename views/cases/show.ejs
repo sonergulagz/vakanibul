@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= case_.title %> - HairTransfer</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <%- include('../partials/navbar') %>
+
+    <div class="container case-detail-container">
+        <div class="case-detail-header">
+            <div class="header-content">
+                <div class="header-top">
+                    <div class="status-badge <%= case_.status %>">
+                        <%= case_.status === 'active' ? 'Aktif' : 
+                           case_.status === 'completed' ? 'Tamamlandı' : 'İptal Edildi' %>
+                    </div>
+                    <% if (user && user._id.toString() === case_.publisher._id.toString()) { %>
+                        <div class="case-actions-dropdown">
+                            <button class="btn-outline btn-status-update" id="statusButton">
+                                <i class="fas fa-ellipsis-v"></i>
+                                Durumu Güncelle
+                            </button>
+                            <div class="dropdown-menu" id="statusMenu">
+                                <% if (case_.status === 'active') { %>
+                                    <a href="#" class="dropdown-item" data-status="completed" onclick="updateStatus(event, '<%= case_._id %>', 'completed')">
+                                        <i class="fas fa-check-circle"></i>
+                                        Tamamlandı Olarak İşaretle
+                                    </a>
+                                    <a href="#" class="dropdown-item" data-status="cancelled" onclick="updateStatus(event, '<%= case_._id %>', 'cancelled')">
+                                        <i class="fas fa-times-circle"></i>
+                                        İptal Et
+                                    </a>
+                                <% } else { %>
+                                    <a href="#" class="dropdown-item" data-status="active" onclick="updateStatus(event, '<%= case_._id %>', 'active')">
+                                        <i class="fas fa-redo"></i>
+                                        Aktif Et
+                                    </a>
+                                <% } %>
+                            </div>
+                        </div>
+                    <% } %>
+                </div>
+                <h1><%= case_.title %></h1>
+                <div class="meta-info">
+                    <span>
+                        <i class="fas fa-calendar"></i>
+                        Yayınlanma: <%= new Date(case_.createdAt).toLocaleDateString('tr-TR') %>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="case-detail-grid">
+            <div class="case-main-content">
+                <div class="detail-section">
+                    <h2>Vaka Detayları</h2>
+                    <div class="detail-grid">
+                        <div class="detail-item">
+                            <i class="fas fa-user-md"></i>
+                            <div class="detail-text">
+                                <span class="label">Uzman Tipi</span>
+                                <span class="value">
+                                    <%= case_.type === 'DHI_SPECIALIST' ? 'DHI Ekimcisi' :
+                                       case_.type === 'FUE_SPECIALIST' ? 'FUE Ekimcisi' :
+                                       case_.type === 'COLLECTOR' ? 'Alımcı (Grafter)' : 'Dizimci' %>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="detail-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <div class="detail-text">
+                                <span class="label">Konum</span>
+                                <span class="value"><%= case_.location %></span>
+                            </div>
+                        </div>
+                        <div class="detail-item">
+                            <i class="fas fa-calendar-alt"></i>
+                            <div class="detail-text">
+                                <span class="label">Başlangıç Tarihi</span>
+                                <span class="value"><%= new Date(case_.date).toLocaleDateString('tr-TR') %></span>
+                            </div>
+                        </div>
+                        <div class="detail-item">
+                            <i class="fas fa-clock"></i>
+                            <div class="detail-text">
+                                <span class="label">Başlangıç Saati</span>
+                                <span class="value"><%= case_.time %></span>
+                            </div>
+                        </div>
+                        <div class="detail-item">
+                            <i class="fas fa-money-bill-wave"></i>
+                            <div class="detail-text">
+                                <span class="label">Ücret</span>
+                                <span class="value"><%= case_.price %> ₺ 
+                                    (<%= case_.priceType === 'PER_HOUR' ? 'Saatlik' :
+                                        case_.priceType === 'PER_DAY' ? 'Günlük' : 'Sabit' %>)
+                                </span>
+                            </div>
+                        </div>
+                        <div class="detail-item">
+                            <i class="fas fa-briefcase"></i>
+                            <div class="detail-text">
+                                <span class="label">Minimum Deneyim</span>
+                                <span class="value"><%= case_.experience %> Yıl</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-section">
+                    <h2>İş Tanımı</h2>
+                    <div class="description">
+                        <%= case_.description %>
+                    </div>
+                </div>
+
+                <% if (case_.requirements) { %>
+                <div class="detail-section">
+                    <h2>Özel Gereksinimler</h2>
+                    <div class="requirements">
+                        <%= case_.requirements %>
+                    </div>
+                </div>
+                <% } %>
+            </div>
+
+            <div class="case-sidebar">
+                <div class="publisher-card">
+                    <div class="publisher-header">
+                        <div class="publisher-avatar">
+                            <img src="<%= case_.publisher.profileImage || '/images/default-avatar.png' %>" 
+                                 alt="<%= case_.publisher.name %>">
+                        </div>
+                        <div class="publisher-info">
+                            <h3>İlan Sahibi</h3>
+                            <p class="publisher-name"><%= case_.publisher.name %></p>
+                            <% if (case_.publisher.title) { %>
+                                <p class="publisher-title"><%= case_.publisher.title %></p>
+                            <% } %>
+                        </div>
+                    </div>
+
+                    <div class="contact-info">
+                        <% if (case_.publisher.phone) { %>
+                            <div class="contact-item">
+                                <i class="fas fa-phone"></i>
+                                <span><%= case_.publisher.phone %></span>
+                            </div>
+                        <% } %>
+                        <div class="contact-item">
+                            <i class="fas fa-envelope"></i>
+                            <span><%= case_.publisher.email %></span>
+                        </div>
+                        <% if (case_.publisher.location) { %>
+                            <div class="contact-item">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span><%= case_.publisher.location %></span>
+                            </div>
+                        <% } %>
+                    </div>
+
+                    <div class="publisher-actions">
+                        <a href="/messages/new/<%= case_.publisher._id %>?case=<%= case_._id %>" class="btn-primary btn-message">
+                            <i class="fas fa-envelope"></i>
+                            Mesaj Gönder
+                        </a>
+                        <% if (case_.publisher.phone) { %>
+                            <a href="tel:<%= case_.publisher.phone %>" class="btn-outline btn-phone">
+                                <i class="fas fa-phone"></i>
+                                Telefon ile Ara
+                            </a>
+                        <% } %>
+                        <a href="/profile/<%= case_.publisher._id %>" class="btn-outline btn-profile">
+                            <i class="fas fa-user"></i>
+                            Profili Görüntüle
+                        </a>
+                    </div>
+                </div>
+
+                <div class="similar-cases">
+                    <h3>Benzer Vakalar</h3>
+                    <!-- Benzer vakalar buraya eklenecek -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const statusButton = document.getElementById('statusButton');
+        const statusMenu = document.getElementById('statusMenu');
+
+        if (statusButton) {
+            statusButton.addEventListener('click', function(e) {
+                e.stopPropagation();
+                statusMenu.classList.toggle('show');
+            });
+
+            document.addEventListener('click', function(e) {
+                if (!statusMenu.contains(e.target) && !statusButton.contains(e.target)) {
+                    statusMenu.classList.remove('show');
+                }
+            });
+        }
+    });
+
+    async function updateStatus(e, caseId, newStatus) {
+        e.preventDefault();
+        
+        try {
+            const response = await fetch(`/cases/${caseId}/status`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ status: newStatus })
+            });
+
+            if (response.ok) {
+                window.location.reload();
+            } else {
+                const data = await response.json();
+                alert(data.error || 'Bir hata oluştu');
+            }
+        } catch (error) {
+            console.error('Durum güncelleme hatası:', error);
+            alert('Durum güncellenirken bir hata oluştu');
+        }
+    }
+    </script>
+</body>
+</html> 

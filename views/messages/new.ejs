@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Yeni Mesaj - HairTransfer</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <%- include('../partials/navbar') %>
+
+    <div class="container message-container">
+        <div class="message-form-header">
+            <h1>Yeni Mesaj</h1>
+        </div>
+
+        <form action="/messages" method="POST" class="message-form">
+            <input type="hidden" name="receiverId" value="<%= receiverId %>">
+            <% if (locals.caseId) { %>
+                <input type="hidden" name="caseId" value="<%= caseId %>">
+            <% } %>
+
+            <div class="form-group">
+                <label for="content">Mesajınız</label>
+                <textarea id="content" name="content" rows="5" required
+                          placeholder="Mesajınızı buraya yazın..."></textarea>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn-primary">
+                    <i class="fas fa-paper-plane"></i>
+                    Mesaj Gönder
+                </button>
+                <a href="javascript:history.back()" class="btn-outline">
+                    <i class="fas fa-times"></i>
+                    İptal
+                </a>
+            </div>
+        </form>
+    </div>
+</body>
+</html> 

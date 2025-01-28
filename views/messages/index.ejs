@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mesajlarım - HairTransfer</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <%- include('../partials/navbar') %>
+
+    <div class="container messages-container">
+        <div class="messages-header">
+            <h1>Mesajlarım</h1>
+        </div>
+
+        <div class="messages-list">
+            <% if (messages.length === 0) { %>
+                <div class="no-messages">
+                    <i class="fas fa-inbox"></i>
+                    <p>Henüz mesajınız bulunmuyor.</p>
+                </div>
+            <% } else { %>
+                <% messages.forEach(message => { %>
+                    <div class="message-card <%= message.receiver._id.toString() === user._id.toString() && !message.read ? 'unread' : '' %>">
+                        <div class="message-header">
+                            <div class="message-user">
+                                <img src="<%= message.sender.profileImage || '/images/default-avatar.png' %>" 
+                                     alt="<%= message.sender.name %>" class="user-avatar">
+                                <div class="user-info">
+                                    <span class="user-name">
+                                        <%= message.sender._id.toString() === user._id.toString() ? 
+                                            `${message.receiver.name} (Gönderilen)` : 
+                                            `${message.sender.name} (Gelen)` %>
+                                    </span>
+                                    <% if (message.case) { %>
+                                        <span class="message-case">
+                                            <i class="fas fa-briefcase"></i>
+                                            <%= message.case.title %>
+                                        </span>
+                                    <% } %>
+                                </div>
+                            </div>
+                            <span class="message-date">
+                                <%= new Date(message.createdAt).toLocaleDateString('tr-TR', {
+                                    year: 'numeric',
+                                    month: 'long',
+                                    day: 'numeric',
+                                    hour: '2-digit',
+                                    minute: '2-digit'
+                                }) %>
+                            </span>
+                        </div>
+                        <div class="message-content">
+                            <%= message.content %>
+                        </div>
+                        <div class="message-actions">
+                            <a href="/messages/new/<%= message.sender._id.toString() === user._id.toString() ? 
+                                message.receiver._id : message.sender._id %>" 
+                               class="btn-outline btn-sm">
+                                <i class="fas fa-reply"></i>
+                                Yanıtla
+                            </a>
+                        </div>
+                    </div>
+                <% }) %>
+            <% } %>
+        </div>
+    </div>
+</body>
+</html> 

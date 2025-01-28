@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Randevularım - HairTransfer</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <%- include('../partials/navbar') %>
+
+    <div class="container appointments-container">
+        <div class="appointments-header">
+            <h1>Randevularım</h1>
+        </div>
+
+        <div class="appointments-list">
+            <% if (appointments.length === 0) { %>
+                <div class="no-appointments">
+                    <i class="fas fa-calendar-times"></i>
+                    <p>Henüz randevunuz bulunmuyor.</p>
+                </div>
+            <% } else { %>
+                <% appointments.forEach(appointment => { %>
+                    <div class="appointment-card">
+                        <div class="appointment-header">
+                            <div class="appointment-title">
+                                <h3><%= appointment.case.title %></h3>
+                                <span class="appointment-type">
+                                    <%= appointment.case.type === 'DHI_SPECIALIST' ? 'DHI Ekimcisi' :
+                                        appointment.case.type === 'FUE_SPECIALIST' ? 'FUE Ekimcisi' :
+                                        appointment.case.type === 'COLLECTOR' ? 'Alımcı (Grafter)' : 'Dizimci' %>
+                                </span>
+                            </div>
+                            <span class="appointment-status <%= appointment.status %>">
+                                <%= appointment.status === 'pending' ? 'Beklemede' :
+                                    appointment.status === 'accepted' ? 'Onaylandı' :
+                                    appointment.status === 'rejected' ? 'Reddedildi' : 'Tamamlandı' %>
+                            </span>
+                        </div>
+
+                        <div class="appointment-details">
+                            <div class="detail-item">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span><%= appointment.case.location %></span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-calendar"></i>
+                                <span><%= new Date(appointment.date).toLocaleDateString('tr-TR') %></span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-clock"></i>
+                                <span><%= appointment.time %></span>
+                            </div>
+                        </div>
+
+                        <div class="appointment-participants">
+                            <div class="participant">
+                                <img src="<%= appointment.doctor.profileImage || '/images/default-avatar.png' %>" 
+                                     alt="<%= appointment.doctor.name %>">
+                                <div class="participant-info">
+                                    <span class="label">Uzman</span>
+                                    <span class="name"><%= appointment.doctor.name %></span>
+                                </div>
+                            </div>
+                            <div class="participant">
+                                <img src="<%= appointment.client.profileImage || '/images/default-avatar.png' %>" 
+                                     alt="<%= appointment.client.name %>">
+                                <div class="participant-info">
+                                    <span class="label">Hasta</span>
+                                    <span class="name"><%= appointment.client.name %></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <% }) %>
+            <% } %>
+        </div>
+    </div>
+</body>
+</html> 

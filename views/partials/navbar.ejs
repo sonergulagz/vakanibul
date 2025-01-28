@@ -1,0 +1,46 @@
+<nav class="navbar">
+    <div class="container">
+        <a href="/" class="logo">
+            <i class="fas fa-search-plus"></i>
+            VakanıBul
+        </a>
+        
+        <div class="nav-links">
+            <% if (user) { %>
+                <a href="/cases/new" class="btn-post-case">
+                    <i class="fas fa-plus"></i>
+                    Vaka Yayınla
+                </a>
+            <% } %>
+            <a href="/cases" class="<%= path === '/cases' ? 'active' : '' %>">Vakalar</a>
+            <a href="/how-it-works" class="<%= path === '/how-it-works' ? 'active' : '' %>">Nasıl Çalışır?</a>
+            
+            <% if (user) { %>
+                <a href="/appointments" class="<%= path === '/appointments' ? 'active' : '' %>">Randevularım</a>
+                <a href="/messages" class="<%= path === '/messages' ? 'active' : '' %>">Mesajlar</a>
+                
+                <div class="user-menu">
+                    <img src="<%= user.profileImage || '/images/default-avatar.png' %>" alt="<%= user.name %>">
+                    <span class="user-name"><%= user.name %></span>
+                    <i class="fas fa-chevron-down"></i>
+                    <div class="dropdown-menu">
+                        <a href="/profile">
+                            <i class="fas fa-user"></i>
+                            Profilim
+                        </a>
+                        <a href="/settings">
+                            <i class="fas fa-cog"></i>
+                            Ayarlar
+                        </a>
+                        <a href="/auth/logout" class="logout">
+                            <i class="fas fa-sign-out-alt"></i>
+                            Çıkış Yap
+                        </a>
+                    </div>
+                </div>
+            <% } else { %>
+                <a href="/auth/login" class="btn-post-case">Giriş Yap</a>
+            <% } %>
+        </div>
+    </div>
+</nav> 

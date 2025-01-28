@@ -1,0 +1,156 @@
+mkdir sac-ekimi-platform
+cd sac-ekimi-platform
+npm init -y
+npm install express mongoose ejs bcrypt express-session nodemon --save-dev 
+npm uninstall nodemon
+npm install nodemon
+npm run dev 
+
+# MongoDB'yi yükleyin (Windows için)
+# https://www.mongodb.com/try/download/community adresinden indirin ve kurun
+
+# MongoDB servisini durdur
+net stop MongoDB
+
+# MongoDB'yi kaldır (Windows Control Panel'den)
+# veya PowerShell ile:
+& "C:\Program Files\MongoDB\Server\{version}\uninstall.exe"
+
+# MongoDB veri klasörünü temizle
+rd /s /q "C:\Program Files\MongoDB"
+rd /s /q "C:\data\db"
+
+# Şimdi MongoDB'yi yeniden yükleyelim:
+# 1. https://www.mongodb.com/try/download/community adresinden MongoDB Community Server'ı indir
+# 2. İndirilen .msi dosyasını çalıştır
+# 3. "Complete" kurulum seçeneğini seç
+# 4. "Install MongoDB as a Service" seçeneğini işaretle
+# 5. Kurulumu tamamla
+
+# MongoDB servisini başlat
+net start MongoDB
+
+mkdir public
+mkdir public/css
+mkdir views
+mkdir routes
+mkdir models
+mkdir public/images
+mkdir views/auth
+mkdir public/uploads
+mkdir public/uploads/profiles
+mkdir views/appointments
+
+# Mevcut node_modules'u sil
+rd /s /q node_modules
+del package-lock.json
+
+# Yeniden yükle
+npm install multer
+
+# Uygulamayı yeniden başlat
+npm run dev 
+
+# MongoDB'nin çalışıp çalışmadığını kontrol et
+net start MongoDB
+
+# Uygulamamızı başlat
+npm run dev 
+
+# Önce eski MongoDB'yi tamamen kaldıralım
+net stop MongoDB
+# MongoDB'yi Control Panel'den kaldırın
+
+# MongoDB'nin yeni sürümünü indirin:
+# https://www.mongodb.com/try/download/community
+# MongoDB Community Server 6.0.x sürümünü seçin (daha kararlı)
+
+# İndirilen .msi dosyasını yönetici olarak çalıştırın
+# "Complete" kurulum seçeneğini seçin
+# "Install MongoDB as a Service" seçeneğini işaretleyin
+# "Run service as Network Service user" seçeneğini işaretleyin
+# Kurulumu tamamlayın
+
+# Veri klasörünü oluşturun
+mkdir C:\data\db
+
+# MongoDB servisini başlatın
+net start MongoDB
+
+# Şimdi projemizi yeniden kuralım:
+cd sac-ekimi-platform
+rd /s /q node_modules
+del package-lock.json
+npm install
+
+# Uygulamayı başlatalım
+npm run dev 
+
+# Proje klasörünün içinde olduğunuzdan emin olun
+cd sac-ekimi-platform
+
+# Klasör yapısını kontrol edin
+dir
+# Şu dosyalar/klasörler olmalı:
+# - app.js
+# - package.json
+# - node_modules/
+# - public/
+# - views/
+# - routes/
+# - models/ 
+
+# MongoDB servisini yeniden başlat
+net stop MongoDB
+net start MongoDB 
+
+cd C:\Users\soner\hairtrans 
+
+# PowerShell'i yönetici olarak açın ve şu komutu çalıştırın:
+net start MongoDB 
+
+# node_modules'u temizle (PowerShell için)
+Remove-Item -Recurse -Force node_modules
+Remove-Item package-lock.json
+
+# Bağımlılıkları yükle
+npm install
+
+# app.js dosyasını oluştur (eğer yoksa)
+# Daha önce paylaştığım app.js içeriğini kopyalayın
+
+# Uygulamayı başlat
+npm run dev 
+
+cd C:\Users\soner\hairtrans
+dir 
+
+# Önce klasör yapısını kontrol edelim
+cd C:\Users\soner\hairtrans
+
+# Auth klasörünü oluştur
+mkdir views\auth
+
+# Uygulamayı yeniden başlat
+npm run dev 
+
+# MongoDB'nin çalışıp çalışmadığını kontrol et
+net start MongoDB
+
+# Uygulamayı yeniden başlat
+npm run dev 
+
+# MongoDB'yi yeniden başlat
+net stop MongoDB
+net start MongoDB
+
+# node_modules'u temizle ve yeniden yükle
+rd /s /q node_modules
+del package-lock.json
+npm install
+
+# Uygulamayı başlat
+npm run dev 
+
+# İndirdiğiniz fotoğrafı public/images klasörüne kopyalayın
+copy default-avatar.png public\images\default-avatar.png

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Profili Düzenle - HairTransfer</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <%- include('../partials/navbar') %>
+
+    <div class="container profile-edit-container">
+        <div class="edit-header">
+            <h1>Profili Düzenle</h1>
+            <p>Profilinizi güncelleyin ve kendinizi tanıtın</p>
+        </div>
+
+        <% if (locals.error) { %>
+            <div class="alert alert-error">
+                <i class="fas fa-exclamation-circle"></i>
+                <%= error %>
+            </div>
+        <% } %>
+
+        <form action="/profile/update" method="POST" enctype="multipart/form-data" class="edit-form">
+            <div class="form-section">
+                <h2>Temel Bilgiler</h2>
+                
+                <div class="profile-image-upload">
+                    <div class="current-image">
+                        <img src="<%= user.profileImage %>" alt="Profil Fotoğrafı" id="profilePreview">
+                    </div>
+                    <div class="upload-controls">
+                        <label for="profileImage" class="btn-outline">
+                            <i class="fas fa-camera"></i>
+                            Fotoğraf Seç
+                        </label>
+                        <input type="file" id="profileImage" name="profileImage" accept="image/*" style="display: none;">
+                        <small>Maximum 5MB, JPG/PNG/GIF formatında</small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="name">Ad Soyad</label>
+                    <input type="text" id="name" name="name" value="<%= user.name %>" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="title">Ünvan</label>
+                        <input type="text" id="title" name="title" value="<%= user.title || '' %>"
+                               placeholder="Örn: Saç Ekimi Uzmanı">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="location">Konum</label>
+                        <input type="text" id="location" name="location" value="<%= user.location || '' %>"
+                               placeholder="Örn: İstanbul, Türkiye">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h2>İletişim Bilgileri</h2>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="email">E-posta</label>
+                        <input type="email" id="email" value="<%= user.email %>" disabled>
+                        <small>E-posta adresi değiştirilemez</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">Telefon</label>
+                        <input type="tel" id="phone" name="phone" value="<%= user.phone || '' %>"
+                               placeholder="Örn: +90 555 123 4567">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h2>Profesyonel Bilgiler</h2>
+
+                <div class="form-group">
+                    <label for="bio">Hakkımda</label>
+                    <textarea id="bio" name="bio" rows="4"
+                              placeholder="Kendinizi tanıtın..."><%= user.bio || '' %></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Uzmanlık Alanları</label>
+                    <div class="specialties-grid">
+                        <% ['DHI', 'FUE', 'Safir FUE', 'Greft Toplama', 'Kanal Açma', 'Greft Yerleştirme'].forEach(specialty => { %>
+                            <label class="specialty-checkbox">
+                                <input type="checkbox" name="specialties" value="<%= specialty %>"
+                                       <%= user.specialties && user.specialties.includes(specialty) ? 'checked' : '' %>>
+                                <span><%= specialty %></span>
+                            </label>
+                        <% }) %>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="experience">Deneyim (Yıl)</label>
+                    <input type="number" id="experience" name="experience" min="0"
+                           value="<%= user.experience || '' %>">
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h2>Sosyal Medya</h2>
+                
+                <div class="form-group">
+                    <label for="instagram">Instagram</label>
+                    <input type="url" id="instagram" name="instagram"
+                           value="<%= user.socialMedia?.instagram || '' %>"
+                           placeholder="https://instagram.com/kullaniciadi">
+                </div>
+
+                <div class="form-group">
+                    <label for="facebook">Facebook</label>
+                    <input type="url" id="facebook" name="facebook"
+                           value="<%= user.socialMedia?.facebook || '' %>"
+                           placeholder="https://facebook.com/kullaniciadi">
+                </div>
+
+                <div class="form-group">
+                    <label for="linkedin">LinkedIn</label>
+                    <input type="url" id="linkedin" name="linkedin"
+                           value="<%= user.socialMedia?.linkedin || '' %>"
+                           placeholder="https://linkedin.com/in/kullaniciadi">
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn-primary">
+                    <i class="fas fa-save"></i>
+                    Değişiklikleri Kaydet
+                </button>
+                <a href="/profile" class="btn-outline">
+                    <i class="fas fa-times"></i>
+                    İptal
+                </a>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Profil fotoğrafı önizleme
+        document.getElementById('profileImage').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('profilePreview').src = e.target.result;
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+</body>
+</html> 

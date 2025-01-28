@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Üye Ol - HairTransfer</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="auth-page">
+    <nav class="navbar">
+        <div class="container">
+            <a href="/" class="logo">
+                <i class="fas fa-user-md"></i>
+                HairTransfer
+            </a>
+        </div>
+    </nav>
+
+    <div class="auth-container">
+        <div class="auth-box">
+            <div class="auth-header">
+                <h1>Üye Ol</h1>
+                <p>Hemen üye olun ve saç ekimi yolculuğunuza başlayın</p>
+            </div>
+            
+            <% if (locals.error) { %>
+                <div class="alert alert-error">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <%= error %>
+                </div>
+            <% } %>
+
+            <form action="/auth/register" method="POST" class="auth-form" id="registerForm">
+                <div class="form-group">
+                    <label for="name">
+                        <i class="fas fa-user"></i>
+                        Ad Soyad
+                    </label>
+                    <input type="text" id="name" name="name" value="<%= locals.values?.name || '' %>" 
+                           required minlength="3" placeholder="Adınız ve soyadınız">
+                    <small class="error-message"></small>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">
+                        <i class="fas fa-envelope"></i>
+                        Email
+                    </label>
+                    <input type="email" id="email" name="email" value="<%= locals.values?.email || '' %>" 
+                           required placeholder="ornek@email.com">
+                    <small class="error-message"></small>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">
+                        <i class="fas fa-phone"></i>
+                        Telefon
+                    </label>
+                    <input type="tel" id="phone" name="phone" value="<%= locals.values?.phone || '' %>" 
+                           required pattern="[0-9]{10}" placeholder="5XX XXX XX XX">
+                    <small class="error-message"></small>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">
+                        <i class="fas fa-lock"></i>
+                        Şifre
+                    </label>
+                    <div class="password-input">
+                        <input type="password" id="password" name="password" required 
+                               minlength="6" placeholder="En az 6 karakter">
+                        <button type="button" class="toggle-password">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                    <small class="error-message"></small>
+                </div>
+
+                <div class="form-group">
+                    <label for="password2">
+                        <i class="fas fa-lock"></i>
+                        Şifre Tekrar
+                    </label>
+                    <div class="password-input">
+                        <input type="password" id="password2" name="password2" required 
+                               minlength="6" placeholder="Şifrenizi tekrar girin">
+                        <button type="button" class="toggle-password">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                    <small class="error-message"></small>
+                </div>
+
+                <div class="form-group terms">
+                    <label class="checkbox-container">
+                        <input type="checkbox" required name="terms">
+                        <span class="checkmark"></span>
+                        <span class="terms-text">
+                            <a href="/terms" target="_blank">Kullanım Koşulları</a>'nı ve
+                            <a href="/privacy" target="_blank">Gizlilik Politikası</a>'nı kabul ediyorum
+                        </span>
+                    </label>
+                </div>
+
+                <button type="submit" class="btn-primary btn-block">
+                    <i class="fas fa-user-plus"></i>
+                    Üye Ol
+                </button>
+            </form>
+
+            <div class="auth-links">
+                <p>Zaten üye misiniz? <a href="/auth/login">Giriş Yapın</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Şifre göster/gizle
+            document.querySelectorAll('.toggle-password').forEach(button => {
+                button.addEventListener('click', function() {
+                    const input = this.previousElementSibling;
+                    const icon = this.querySelector('i');
+                    
+                    if (input.type === 'password') {
+                        input.type = 'text';
+                        icon.classList.remove('fa-eye');
+                        icon.classList.add('fa-eye-slash');
+                    } else {
+                        input.type = 'password';
+                        icon.classList.remove('fa-eye-slash');
+                        icon.classList.add('fa-eye');
+                    }
+                });
+            });
+
+            // Form validasyonu
+            const form = document.getElementById('registerForm');
+            form.addEventListener('submit', function(e) {
+                let isValid = true;
+
+                // Şifre kontrolü
+                const password = document.getElementById('password');
+                const password2 = document.getElementById('password2');
+                
+                if (password.value !== password2.value) {
+                    isValid = false;
+                    password2.nextElementSibling.textContent = 'Şifreler eşleşmiyor';
+                }
+
+                // Telefon formatı kontrolü
+                const phone = document.getElementById('phone');
+                if (!phone.value.match(/^[0-9]{10}$/)) {
+                    isValid = false;
+                    phone.nextElementSibling.textContent = 'Geçerli bir telefon numarası girin';
+                }
+
+                if (!isValid) {
+                    e.preventDefault();
+                }
+            });
+        });
+    </script>
+</body>
+</html> 

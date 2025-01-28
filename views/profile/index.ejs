@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Profilim - HairTransfer</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <%- include('../partials/navbar') %>
+
+    <div class="container profile-container">
+        <div class="profile-header">
+            <div class="profile-cover"></div>
+            <div class="profile-info">
+                <div class="profile-avatar">
+                    <img src="<%= user.profileImage %>" alt="<%= user.name %>">
+                </div>
+                <div class="profile-details">
+                    <h1><%= user.name %></h1>
+                    <% if (user.title) { %>
+                        <p class="profile-title"><%= user.title %></p>
+                    <% } %>
+                    <div class="profile-meta">
+                        <% if (user.location) { %>
+                            <span><i class="fas fa-map-marker-alt"></i> <%= user.location %></span>
+                        <% } %>
+                        <% if (user.experience) { %>
+                            <span><i class="fas fa-briefcase"></i> <%= user.experience %> Yıl Deneyim</span>
+                        <% } %>
+                    </div>
+                </div>
+                <div class="profile-actions">
+                    <a href="/profile/edit" class="btn-primary">
+                        <i class="fas fa-edit"></i>
+                        Profili Düzenle
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="profile-content">
+            <div class="profile-main">
+                <% if (user.bio) { %>
+                    <section class="profile-section">
+                        <h2>Hakkımda</h2>
+                        <p><%= user.bio %></p>
+                    </section>
+                <% } %>
+
+                <% if (user.specialties && user.specialties.length > 0) { %>
+                    <section class="profile-section">
+                        <h2>Uzmanlık Alanları</h2>
+                        <div class="specialties-grid">
+                            <% user.specialties.forEach(specialty => { %>
+                                <span class="specialty-tag"><%= specialty %></span>
+                            <% }) %>
+                        </div>
+                    </section>
+                <% } %>
+
+                <% if (user.certificates && user.certificates.length > 0) { %>
+                    <section class="profile-section">
+                        <h2>Sertifikalar</h2>
+                        <div class="certificates-list">
+                            <% user.certificates.forEach(cert => { %>
+                                <div class="certificate-item">
+                                    <h3><%= cert.name %></h3>
+                                    <p><%= cert.issuer %> - <%= cert.year %></p>
+                                </div>
+                            <% }) %>
+                        </div>
+                    </section>
+                <% } %>
+            </div>
+
+            <div class="profile-sidebar">
+                <div class="contact-card">
+                    <h3>İletişim Bilgileri</h3>
+                    <div class="contact-info">
+                        <p><i class="fas fa-envelope"></i> <%= user.email %></p>
+                        <% if (user.phone) { %>
+                            <p><i class="fas fa-phone"></i> <%= user.phone %></p>
+                        <% } %>
+                    </div>
+                </div>
+
+                <% if (user.socialMedia && (user.socialMedia.instagram || user.socialMedia.facebook || user.socialMedia.linkedin)) { %>
+                    <div class="social-links">
+                        <h3>Sosyal Medya</h3>
+                        <div class="social-icons">
+                            <% if (user.socialMedia.instagram) { %>
+                                <a href="<%= user.socialMedia.instagram %>" target="_blank" class="social-icon instagram">
+                                    <i class="fab fa-instagram"></i>
+                                </a>
+                            <% } %>
+                            <% if (user.socialMedia.facebook) { %>
+                                <a href="<%= user.socialMedia.facebook %>" target="_blank" class="social-icon facebook">
+                                    <i class="fab fa-facebook"></i>
+                                </a>
+                            <% } %>
+                            <% if (user.socialMedia.linkedin) { %>
+                                <a href="<%= user.socialMedia.linkedin %>" target="_blank" class="social-icon linkedin">
+                                    <i class="fab fa-linkedin"></i>
+                                </a>
+                            <% } %>
+                        </div>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

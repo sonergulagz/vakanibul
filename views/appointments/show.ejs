@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= appointment.title %> - HairTransfer</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <%- include('../partials/navbar') %>
+
+    <div class="container appointment-detail-container">
+        <div class="appointment-detail-header">
+            <div class="header-content">
+                <div class="header-top">
+                    <div class="status-badge <%= appointment.status %>">
+                        <%= appointment.status === 'active' ? 'Aktif' : 
+                           appointment.status === 'completed' ? 'Tamamlandı' : 'İptal Edildi' %>
+                    </div>
+                    <% if (user && user._id.toString() === appointment.publisher._id.toString()) { %>
+                        <div class="appointment-actions-dropdown">
+                            <button class="btn-outline btn-status-update" id="statusButton">
+                                <i class="fas fa-ellipsis-v"></i>
+                                Durumu Güncelle
+                            </button>
+                            <div class="dropdown-menu" id="statusMenu">
+                                <% if (appointment.status === 'active') { %>
+                                    <a href="#" class="dropdown-item" data-status="completed" onclick="updateStatus(event, '<%= appointment._id %>', 'completed')">
+                                        <i class="fas fa-check-circle"></i>
+                                        Tamamlandı Olarak İşaretle
+                                    </a>
+                                    <a href="#" class="dropdown-item" data-status="cancelled" onclick="updateStatus(event, '<%= appointment._id %>', 'cancelled')">
+                                        <i class="fas fa-times-circle"></i>
+                                        İptal Et
+                                    </a>
+                                <% } else { %>
+                                    <a href="#" class="dropdown-item" data-status="active" onclick="updateStatus(event, '<%= appointment._id %>', 'active')">
+                                        <i class="fas fa-redo"></i>
+                                        Aktif Et
+                                    </a>
+                                <% } %>
+                            </div>
+                        </div>
+                    <% } %>
+                </div>
+                <h1><%= appointment.title %></h1>
+                <div class="meta-info">
+                    <span>
+                        <i class="fas fa-calendar"></i>
+                        Yayınlanma: <%= new Date(appointment.createdAt).toLocaleDateString('tr-TR') %>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="appointment-detail-grid">
+            <div class="appointment-main-content">
+                <!-- Randevu detayları -->
+                <div class="detail-section">
+                    <h2>Randevu Detayları</h2>
+                    <div class="detail-grid">
+                        <div class="detail-item">
+                            <i class="fas fa-user-md"></i>
+                            <div class="detail-text">
+                                <span class="label">Uzman Tipi</span>
+                                <span class="value">
+                                    <%= appointment.type === 'DHI_SPECIALIST' ? 'DHI Ekimcisi' :
+                                       appointment.type === 'FUE_SPECIALIST' ? 'FUE Ekimcisi' :
+                                       appointment.type === 'COLLECTOR' ? 'Alımcı (Grafter)' : 'Dizimci' %>
+                                </span>
+                            </div>
+                        </div>
+                        <!-- Diğer detaylar... -->
+                    </div>
+                </div>
+
+                <div class="detail-section">
+                    <h2>İş Tanımı</h2>
+                    <div class="description">
+                        <%= appointment.description %>
+                    </div>
+                </div>
+
+                <% if (appointment.requirements) { %>
+                <div class="detail-section">
+                    <h2>Özel Gereksinimler</h2>
+                    <div class="requirements">
+                        <%= appointment.requirements %>
+                    </div>
+                </div>
+                <% } %>
+            </div>
+
+            <div class="appointment-sidebar">
+                <!-- İlan sahibi bilgileri -->
+                <div class="publisher-card">
+                    <!-- ... -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const statusButton = document.getElementById('statusButton');
+        const statusMenu = document.getElementById('statusMenu');
+
+        if (statusButton) {
+            statusButton.addEventListener('click', function(e) {
+                e.stopPropagation();
+                statusMenu.classList.toggle('show');
+            });
+
+            document.addEventListener('click', function(e) {
+                if (!statusMenu.contains(e.target) && !statusButton.contains(e.target)) {
+                    statusMenu.classList.remove('show');
+                }
+            });
+        }
+    });
+
+    async function updateStatus(e, appointmentId, newStatus) {
+        e.preventDefault();
+        
+        try {
+            const response = await fetch(`/appointments/${appointmentId}/status`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ status: newStatus })
+            });
+
+            if (response.ok) {
+                window.location.reload();
+            } else {
+                const data = await response.json();
+                alert(data.error || 'Bir hata oluştu');
+            }
+        } catch (error) {
+            console.error('Durum güncelleme hatası:', error);
+            alert('Durum güncellenirken bir hata oluştu');
+        }
+    }
+    </script>
+</body>
+</html> 

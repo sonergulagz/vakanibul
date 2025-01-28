@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Yeni Vaka Yayınla - HairTransfer</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <%- include('../partials/navbar') %>
+
+    <div class="container">
+        <div class="form-container case-form-container">
+            <div class="form-header">
+                <h1>Yeni Vaka Yayınla</h1>
+                <p>Aradığınız uzmanı bulmak için detaylı bilgi verin</p>
+            </div>
+
+            <% if (locals.error) { %>
+                <div class="alert alert-error">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <%= error %>
+                </div>
+            <% } %>
+
+            <form action="/cases" method="POST" class="case-form" id="caseForm">
+                <div class="form-section">
+                    <h2>
+                        <i class="fas fa-info-circle"></i>
+                        Temel Bilgiler
+                    </h2>
+                    
+                    <div class="form-group">
+                        <label for="title">İlan Başlığı</label>
+                        <input type="text" id="title" name="title" required 
+                               value="<%= locals.values?.title || '' %>"
+                               placeholder="Örn: Deneyimli DHI Uzmanı Aranıyor">
+                        <small>Kısa ve açıklayıcı bir başlık yazın</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="type">Uzman Tipi</label>
+                        <select id="type" name="type" required>
+                            <option value="">Seçiniz</option>
+                            <option value="DHI_SPECIALIST" <%= locals.values?.type === 'DHI_SPECIALIST' ? 'selected' : '' %>>
+                                DHI Ekimcisi
+                            </option>
+                            <option value="FUE_SPECIALIST" <%= locals.values?.type === 'FUE_SPECIALIST' ? 'selected' : '' %>>
+                                FUE Ekimcisi
+                            </option>
+                            <option value="COLLECTOR" <%= locals.values?.type === 'COLLECTOR' ? 'selected' : '' %>>
+                                Alımcı (Grafter)
+                            </option>
+                            <option value="PLANTER" <%= locals.values?.type === 'PLANTER' ? 'selected' : '' %>>
+                                Dizimci
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="experience">Minimum Deneyim (Yıl)</label>
+                            <input type="number" id="experience" name="experience" min="0" required 
+                                   value="<%= locals.values?.experience || '' %>">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="location">Konum</label>
+                            <input type="text" id="location" name="location" required 
+                                   value="<%= locals.values?.location || '' %>"
+                                   placeholder="Örn: İstanbul, Şişli">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h2>
+                        <i class="fas fa-briefcase"></i>
+                        Çalışma Detayları
+                    </h2>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="date">Başlangıç Tarihi</label>
+                            <input type="date" id="date" name="date" required 
+                                   value="<%= locals.values?.date || '' %>">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="time">Başlangıç Saati</label>
+                            <input type="time" id="time" name="time" required 
+                                   value="<%= locals.values?.time || '' %>">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="price">Ücret</label>
+                            <div class="price-input">
+                                <input type="number" id="price" name="price" min="0" required 
+                                       value="<%= locals.values?.price || '' %>"
+                                       placeholder="Örn: 1000">
+                                <span class="currency">₺</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="priceType">Ücret Tipi</label>
+                            <select id="priceType" name="priceType" required>
+                                <option value="">Seçiniz</option>
+                                <option value="PER_HOUR" <%= locals.values?.priceType === 'PER_HOUR' ? 'selected' : '' %>>
+                                    Saatlik
+                                </option>
+                                <option value="PER_DAY" <%= locals.values?.priceType === 'PER_DAY' ? 'selected' : '' %>>
+                                    Günlük
+                                </option>
+                                <option value="FIXED" <%= locals.values?.priceType === 'FIXED' ? 'selected' : '' %>>
+                                    Sabit Ücret
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h2>
+                        <i class="fas fa-file-alt"></i>
+                        Detaylı Bilgi
+                    </h2>
+
+                    <div class="form-group">
+                        <label for="description">İş Tanımı</label>
+                        <textarea id="description" name="description" required rows="4"
+                                  placeholder="Vaka hakkında detaylı bilgi verin"><%= locals.values?.description || '' %></textarea>
+                        <small>İş tanımını, beklentilerinizi ve önemli detayları belirtin</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="requirements">Özel Gereksinimler (Opsiyonel)</label>
+                        <textarea id="requirements" name="requirements" rows="3"
+                                  placeholder="Örn: Özel ekipman, sertifika gereksinimleri"><%= locals.values?.requirements || '' %></textarea>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-primary btn-block">
+                    <i class="fas fa-paper-plane"></i>
+                    Vakayı Yayınla
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('caseForm');
+            
+            form.addEventListener('submit', function(e) {
+                let isValid = true;
+                const price = document.getElementById('price');
+                const experience = document.getElementById('experience');
+
+                // Fiyat kontrolü
+                if (price.value < 0) {
+                    isValid = false;
+                    price.setCustomValidity('Fiyat 0\'dan küçük olamaz');
+                } else {
+                    price.setCustomValidity('');
+                }
+
+                // Deneyim kontrolü
+                if (experience.value < 0) {
+                    isValid = false;
+                    experience.setCustomValidity('Deneyim 0\'dan küçük olamaz');
+                } else {
+                    experience.setCustomValidity('');
+                }
+
+                if (!isValid) {
+                    e.preventDefault();
+                }
+            });
+        });
+    </script>
+</body>
+</html> 

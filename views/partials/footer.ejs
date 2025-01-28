@@ -1,0 +1,72 @@
+<footer>
+    <div class="container">
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h4>HairTransfer</h4>
+                <p>Türkiye'nin en büyük saç ekimi uzmanları platformu. Güvenilir ve profesyonel hizmet için doğru adres.</p>
+                <div class="social-links">
+                    <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h4>Hızlı Erişim</h4>
+                <ul>
+                    <li><a href="/about"><i class="fas fa-chevron-right"></i>Hakkımızda</a></li>
+                    <li><a href="/how-it-works"><i class="fas fa-chevron-right"></i>Nasıl Çalışır?</a></li>
+                    <li><a href="/contact"><i class="fas fa-chevron-right"></i>İletişim</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Hizmetler</h4>
+                <ul>
+                    <li><a href="/cases"><i class="fas fa-chevron-right"></i>Vakalar</a></li>
+                    <li><a href="/cases/new"><i class="fas fa-chevron-right"></i>Vaka Yayınla</a></li>
+                    <li><a href="/appointments"><i class="fas fa-chevron-right"></i>Randevular</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Yasal</h4>
+                <ul>
+                    <li><a href="/privacy"><i class="fas fa-chevron-right"></i>Gizlilik Politikası</a></li>
+                    <li><a href="/terms"><i class="fas fa-chevron-right"></i>Kullanım Koşulları</a></li>
+                    <li><a href="/cookies"><i class="fas fa-chevron-right"></i>Çerez Politikası</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; <%= new Date().getFullYear() %> HairTransfer. Tüm hakları saklıdır.</p>
+        </div>
+    </div>
+</footer>
+
+<div class="scroll-progress"></div>
+
+<script>
+// Scroll Progress Bar
+window.addEventListener('scroll', () => {
+    const scrollProgress = document.querySelector('.scroll-progress');
+    const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+    const scrolled = window.scrollY;
+    
+    const progressWidth = `${(scrolled / scrollable) * 100}%`;
+    scrollProgress.style.width = progressWidth;
+});
+
+// Navbar Scroll Effect
+window.addEventListener('scroll', () => {
+    const navbar = document.querySelector('.navbar');
+    if (window.scrollY > 100) {
+        navbar.classList.add('scrolled');
+    } else {
+        navbar.classList.remove('scrolled');
+    }
+});
+
+// Page Transition
+document.addEventListener('DOMContentLoaded', () => {
+    document.body.classList.add('page-transition');
+});
+</script> 

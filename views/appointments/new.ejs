@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Yeni Randevu - HairTransfer</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <%- include('../partials/navbar') %>
+
+    <div class="container new-appointment-container">
+        <div class="form-header">
+            <h1>Yeni Randevu Oluştur</h1>
+            <p>Randevu detaylarını girin</p>
+        </div>
+
+        <% if (locals.error) { %>
+            <div class="alert alert-error">
+                <i class="fas fa-exclamation-circle"></i>
+                <%= error %>
+            </div>
+        <% } %>
+
+        <form action="/appointments" method="POST" class="appointment-form">
+            <div class="form-section">
+                <h2>Temel Bilgiler</h2>
+                
+                <div class="form-group">
+                    <label for="title">Başlık</label>
+                    <input type="text" id="title" name="title" required
+                           value="<%= locals.values?.title || '' %>"
+                           placeholder="Örn: DHI Ekimcisi Aranıyor">
+                </div>
+
+                <div class="form-group">
+                    <label for="type">Uzman Tipi</label>
+                    <select id="type" name="type" required>
+                        <option value="">Seçiniz...</option>
+                        <option value="DHI_SPECIALIST" <%= locals.values?.type === 'DHI_SPECIALIST' ? 'selected' : '' %>>
+                            DHI Ekimcisi
+                        </option>
+                        <option value="FUE_SPECIALIST" <%= locals.values?.type === 'FUE_SPECIALIST' ? 'selected' : '' %>>
+                            FUE Ekimcisi
+                        </option>
+                        <option value="COLLECTOR" <%= locals.values?.type === 'COLLECTOR' ? 'selected' : '' %>>
+                            Alımcı (Grafter)
+                        </option>
+                        <option value="PLANTER" <%= locals.values?.type === 'PLANTER' ? 'selected' : '' %>>
+                            Dizimci
+                        </option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="location">Konum</label>
+                    <input type="text" id="location" name="location" required
+                           value="<%= locals.values?.location || '' %>"
+                           placeholder="Örn: İstanbul, Şişli">
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h2>Zaman ve Ücret</h2>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="date">Tarih</label>
+                        <input type="date" id="date" name="date" required
+                               value="<%= locals.values?.date || '' %>">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="time">Saat</label>
+                        <input type="time" id="time" name="time" required
+                               value="<%= locals.values?.time || '' %>">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="price">Ücret (₺)</label>
+                        <input type="number" id="price" name="price" required
+                               value="<%= locals.values?.price || '' %>"
+                               min="0" step="1">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="priceType">Ücret Tipi</label>
+                        <select id="priceType" name="priceType" required>
+                            <option value="">Seçiniz...</option>
+                            <option value="PER_HOUR" <%= locals.values?.priceType === 'PER_HOUR' ? 'selected' : '' %>>
+                                Saatlik
+                            </option>
+                            <option value="PER_DAY" <%= locals.values?.priceType === 'PER_DAY' ? 'selected' : '' %>>
+                                Günlük
+                            </option>
+                            <option value="FIXED" <%= locals.values?.priceType === 'FIXED' ? 'selected' : '' %>>
+                                Sabit
+                            </option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h2>Detaylar</h2>
+
+                <div class="form-group">
+                    <label for="experience">Minimum Deneyim (Yıl)</label>
+                    <input type="number" id="experience" name="experience" required
+                           value="<%= locals.values?.experience || '' %>"
+                           min="0" step="1">
+                </div>
+
+                <div class="form-group">
+                    <label for="description">İş Tanımı</label>
+                    <textarea id="description" name="description" required rows="4"
+                              placeholder="İş tanımını detaylı bir şekilde yazın..."><%= locals.values?.description || '' %></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="requirements">Özel Gereksinimler (Opsiyonel)</label>
+                    <textarea id="requirements" name="requirements" rows="3"
+                              placeholder="Varsa özel gereksinimleri yazın..."><%= locals.values?.requirements || '' %></textarea>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn-primary">
+                    <i class="fas fa-save"></i>
+                    Randevu Oluştur
+                </button>
+                <a href="/appointments" class="btn-outline">
+                    <i class="fas fa-times"></i>
+                    İptal
+                </a>
+            </div>
+        </form>
+    </div>
+</body>
+</html> 
