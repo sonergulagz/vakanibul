@@ -76,8 +76,20 @@ userSchema.pre('save', async function(next) {
 // Şifre kontrolü
 userSchema.methods.comparePassword = async function(candidatePassword) {
     try {
-        return await bcrypt.compare(candidatePassword, this.password);
+        console.log('Password comparison started');
+        console.log('Candidate password length:', candidatePassword.length);
+        console.log('Stored password exists:', !!this.password);
+        
+        const isMatch = await bcrypt.compare(candidatePassword, this.password);
+        console.log('Password comparison result:', isMatch);
+        
+        return isMatch;
     } catch (error) {
+        console.error('Password comparison error:', {
+            name: error.name,
+            message: error.message,
+            stack: error.stack
+        });
         throw error;
     }
 };

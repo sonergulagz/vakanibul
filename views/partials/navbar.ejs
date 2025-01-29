@@ -5,6 +5,10 @@
             VakanıBul
         </a>
         
+        <div class="mobile-menu-btn">
+            <i class="fas fa-bars"></i>
+        </div>
+
         <div class="nav-links">
             <% if (user) { %>
                 <a href="/cases/new" class="btn-post-case">
@@ -43,4 +47,27 @@
             <% } %>
         </div>
     </div>
-</nav> 
+</nav>
+
+<!-- Navbar JavaScript -->
+<script>
+document.querySelector('.mobile-menu-btn').addEventListener('click', () => {
+    document.querySelector('.nav-links').classList.toggle('active');
+    const icon = document.querySelector('.mobile-menu-btn i');
+    icon.classList.toggle('fa-bars');
+    icon.classList.toggle('fa-times');
+});
+
+// Menü dışına tıklandığında menüyü kapat
+document.addEventListener('click', (e) => {
+    const navLinks = document.querySelector('.nav-links');
+    const mobileBtn = document.querySelector('.mobile-menu-btn');
+    
+    if (!navLinks.contains(e.target) && !mobileBtn.contains(e.target)) {
+        navLinks.classList.remove('active');
+        const icon = document.querySelector('.mobile-menu-btn i');
+        icon.classList.remove('fa-times');
+        icon.classList.add('fa-bars');
+    }
+});
+</script> 

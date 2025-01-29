@@ -54,10 +54,18 @@ router.post('/register', async (req, res) => {
 router.post('/login', async (req, res) => {
     try {
         const { email, password } = req.body;
+        console.log('Login attempt:', { email, timestamp: new Date().toISOString() });
 
         // Kullanıcıyı bul
         const user = await User.findOne({ email });
+        console.log('User lookup result:', {
+            found: !!user,
+            userId: user?._id,
+            timestamp: new Date().toISOString()
+        });
+
         if (!user) {
+            console.log('Login failed: User not found');
             return res.render('auth/login', {
                 error: 'Email veya şifre hatalı',
                 values: { email }
@@ -65,22 +73,50 @@ router.post('/login', async (req, res) => {
         }
 
         // Şifre kontrolü
-        const isMatch = await user.comparePassword(password);
-        if (!isMatch) {
-            return res.render('auth/login', {
-                error: 'Email veya şifre hatalı',
-                values: { email }
+        try {
+            const isMatch = await user.comparePassword(password);
+            console.log('Password verification:', {
+                userId: user._id,
+                isMatch,
+                timestamp: new Date().toISOString()
             });
+
+            if (!isMatch) {
+                console.log('Login failed: Password mismatch');
+                return res.render('auth/login', {
+                    error: 'Email veya şifre hatalı',
+                    values: { email }
+                });
+            }
+
+            // Session'a kullanıcı bilgisini kaydet
+            req.session.userId = user._id;
+            console.log('Session created:', {
+                userId: user._id,
+                timestamp: new Date().toISOString()
+            });
+
+            res.redirect('/');
+
+        } catch (passwordError) {
+            console.error('Password verification error:', {
+                name: passwordError.name,
+                message: passwordError.message,
+                stack: passwordError.stack
+            });
+            throw passwordError;
         }
 
-        // Session'a kullanıcı bilgisini kaydet
-        req.session.userId = user._id;
-        res.redirect('/');
-
     } catch (error) {
-        console.error('Giriş hatası:', error);
+        console.error('Login error:', {
+            name: error.name,
+            message: error.message,
+            stack: error.stack,
+            timestamp: new Date().toISOString()
+        });
+        
         res.render('auth/login', {
-            error: 'Giriş sırasında bir hata oluştu',
+            error: 'Giriş sırasında bir hata oluştu. Lütfen tekrar deneyin.',
             values: req.body
         });
     }

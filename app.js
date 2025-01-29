@@ -25,10 +25,14 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Session middleware
 app.use(session({
-    secret: 'sacekimigizlianahtar',
+    secret: process.env.SESSION_SECRET || 'sacekimigizlianahtar',
     resave: false,
-    saveUninitialized: true,
-    cookie: { secure: false }
+    saveUninitialized: false,
+    cookie: {
+        secure: process.env.NODE_ENV === 'production',
+        httpOnly: true,
+        maxAge: 1000 * 60 * 60 * 24
+    }
 }));
 
 // Path middleware
@@ -112,15 +116,25 @@ app.use('/messages', messagesRouter);
 app.locals.siteName = 'VakanıBul';
 
 // MongoDB bağlantısı
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/sacekimi', {
+mongoose.connect(process.env.MONGODB_URI, {
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
+    serverSelectionTimeoutMS: 5000
 })
 .then(() => {
     console.log('MongoDB bağlantısı başarılı');
+    const maskedURI = process.env.MONGODB_URI.replace(
+        /(mongodb(?:\+srv)?:\/\/)([^:]+):([^@]+)@/,
+        '$1****:****@'
+    );
+    console.log('MongoDB URI:', maskedURI);
 })
 .catch(err => {
-    console.error('MongoDB bağlantı hatası:', err);
+    console.error('MongoDB bağlantı hatası:', {
+        name: err.name,
+        message: err.message,
+        code: err.code
+    });
 });
 
 // 404 sayfası
