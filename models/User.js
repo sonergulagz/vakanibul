@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
 const userSchema = new mongoose.Schema({
     name: {
@@ -64,13 +64,22 @@ const userSchema = new mongoose.Schema({
 // Şifre hashleme
 userSchema.pre('save', async function(next) {
     if (!this.isModified('password')) return next();
-    this.password = await bcrypt.hash(this.password, 10);
-    next();
+    
+    try {
+        this.password = await bcrypt.hash(this.password, 10);
+        next();
+    } catch (error) {
+        next(error);
+    }
 });
 
 // Şifre kontrolü
 userSchema.methods.comparePassword = async function(candidatePassword) {
-    return await bcrypt.compare(candidatePassword, this.password);
+    try {
+        return await bcrypt.compare(candidatePassword, this.password);
+    } catch (error) {
+        throw error;
+    }
 };
 
 module.exports = mongoose.model('User', userSchema); 

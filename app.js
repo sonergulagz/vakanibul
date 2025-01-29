@@ -9,6 +9,7 @@ const appointmentsRouter = require('./routes/appointments');
 const messagesRouter = require('./routes/messages');
 const User = require('./models/User');
 const hospitals = require('./data/hospitals');
+const cors = require('cors');
 const app = express();
 
 console.log('Uygulama başlatılıyor...');
@@ -49,6 +50,12 @@ app.use(async (req, res, next) => {
     }
     next();
 });
+
+// CORS middleware ekle
+app.use(cors({
+    origin: process.env.FRONTEND_URL || '*',
+    credentials: true
+}));
 
 // Test route
 app.get('/test', (req, res) => {
